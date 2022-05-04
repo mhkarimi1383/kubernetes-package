@@ -17,11 +17,7 @@ echo "
 ██║░░░░░██║░░██║╚█████╔╝██║░╚██╗██║░░██║╚██████╔╝███████╗
 ╚═╝░░░░░╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝
 "
-
-if [ "$EUID" -ne 0 ]
-  then echo "Please run as root"
-  exit 1
-fi
+echo -e "\nNOTE: this script will ask you for your sudo password multiple times"
 
 echo -e "\nchecking and installing kubectl...\n"
 
@@ -47,7 +43,9 @@ then
     echo "getting version $kubectl_version of kubectl as latest and stable version"
     set -e
     curl -LO --fail-with-body "$download_link"
-    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    chmod +x kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+    sudo chown root: /usr/local/bin/kubectl
     set +e
 
 else
