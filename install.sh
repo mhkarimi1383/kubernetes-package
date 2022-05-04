@@ -72,7 +72,7 @@ set_alias() {
     fi
     echo "setting alias in $rc_file"
     line_to_add="command -v kubectl > /dev/null && alias k=\"kubectl\""
-    if grep -Fxq "" "$rc_file"
+    if grep -Fxq "$line_to_add" "$rc_file"
     then
         echo "alias already added"
     else
@@ -96,7 +96,7 @@ install_krew(){
     if grep -q "zsh" <<< "$SHELL"; then
         rc_file="$HOME/.zshrc"
     fi
-    echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> rc_file
+    echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> "$rc_file"
 }
 
 install_kubectx(){
@@ -107,6 +107,30 @@ install_kubectx(){
     git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME"/.fzf
     "$HOME"/.fzf/install
     echo "kubectl ns and kubectl ctx are avaiable"
+}
+
+install_kube_ps(){
+    git clone https://github.com/jonmosco/kube-ps1 "$HOME"/.kube-ps1
+    if grep -q "bash" <<< "$SHELL"; then
+        rc_file="$HOME/.bashrc"
+    fi
+    if grep -q "zsh" <<< "$SHELL"; then
+        rc_file="$HOME/.zshrc"
+    fi
+    line_to_add='source "$HOME"/.kube-ps1/kube-ps1.sh'
+    if grep -Fxq "$line_to_add" "$rc_file"
+    then
+        echo "kube-ps already added"
+    else
+        echo "$line_to_add" >> "$rc_file"
+    fi
+    line_to_add='PROMPT=$PROMPT'\'' $(kube_ps1) '\'''
+    if grep -Fxq "$line_to_add" "$rc_file"
+    then
+        echo "kube-ps prompt already added"
+    else
+        echo "$line_to_add" >> "$rc_file"
+    fi
 }
 
 read -p "Do you wish to set an alias for k=kubectl? [Yy]/[Nn] " yn
@@ -133,6 +157,13 @@ esac
 read -p "Do you wish to install neat plugin (k8s yaml clean-up)? [Yy]/[Nn] " yn
 case $yn in
     [Yy]* ) kubectl krew install neat && echo "kubect neat is available now";;
+    [Nn]* ) echo;;
+    * ) echo "Please answer [Yy] or [Nn].";;
+esac
+
+read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
+case $yn in
+    [Yy]* ) install_kube_ps;;
     [Nn]* ) echo;;
     * ) echo "Please answer [Yy] or [Nn].";;
 esac
