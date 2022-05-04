@@ -16,6 +16,12 @@ echo "
 ██╔═══╝░██╔══██║██║░░██╗██╔═██╗░██╔══██║██║░░╚██╗██╔══╝░░
 ██║░░░░░██║░░██║╚█████╔╝██║░╚██╗██║░░██║╚██████╔╝███████╗
 ╚═╝░░░░░╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝
+
+Made with ❤️ by Muhammed Hussein Karimi
+Email: info@karimi.dev
+Blog: karimi.dev
+GitHub: github.com/mhkarimi1383
+Star Me At: github.com/mhkarimi1383/kubernetes-package
 "
 echo -e "\nNOTE: this script will ask you for your sudo password multiple times"
 
