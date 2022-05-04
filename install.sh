@@ -28,7 +28,7 @@ echo -e "\nNOTE: this script will ask you for your sudo password multiple times"
 echo -e "\nchecking and installing kubectl...\n"
 
 kubectl_location="$(command -v kubectl)"
-git_location="$(command -v kubectl)"
+git_location="$(command -v git)"
 
 if grep -q "bash" <<< "$SHELL" > /dev/null || grep -q "zsh" <<< "$SHELL" > /dev/null
 then
