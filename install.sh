@@ -50,7 +50,7 @@ then
     operating_system="$(uname -s)"
     architechture="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
     download_link=""
-    kubectl_version="$(curl --fail-with-body -L -s https://dl.k8s.io/release/stable.txt)"
+    kubectl_version="$(curl -L -s https://dl.k8s.io/release/stable.txt)"
     case "${operating_system}" in
         Linux*)     download_link="https://dl.k8s.io/release/$kubectl_version/bin/linux/$architechture/kubectl";;
         Darwin*)    download_link="https://dl.k8s.io/release/$kubectl_version/bin/darwin/$architechture/kubectl";;
@@ -59,7 +59,7 @@ then
     echo "You are running $operating_system with $architechture CPU"
     echo "getting version $kubectl_version of kubectl as latest and stable version"
     set -e
-    curl -LO --fail-with-body "$download_link"
+    curl -LO "$download_link"
     chmod +x kubectl
     sudo mv ./kubectl /usr/local/bin/kubectl
     sudo chown root: /usr/local/bin/kubectl
@@ -92,7 +92,7 @@ install_krew(){
     OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
     ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
     KREW="krew-${OS}_${ARCH}" &&
-    curl -fsSLO --fail-with-body "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
     tar zxvf "${KREW}.tar.gz" &&
     ./"${KREW}" install krew
     )
