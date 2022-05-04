@@ -10,10 +10,11 @@ just clone it and run install.sh file in your terminal
 - [kubectl-krew](https://github.com/kubernetes-sigs/krew/)
 - [kubectl-neat](https://github.com/itaysk/kubectl-neat)
 - [fzf](https://github.com/junegunn/fzf.git)
+- [lens](https://github.com/lensapp/lens)
 
 ## Supported Operating Systems:
 - Mac OS (M1 Silicon and Intel)
 - Linux
 
 ## TODO:
-- [ ] also install lens
+- [x] also install lens

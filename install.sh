@@ -151,6 +151,105 @@ install_kube_ps(){
     fi
 }
 
+install_dmg(){
+    set -x
+    tempd=$(mktemp -d)
+    curl $1 > $tempd/pkg.dmg
+    listing=$(sudo hdiutil attach $tempd/pkg.dmg | grep Volumes)
+    volume=$(echo "$listing" | cut -f 3)
+    found=false
+    for file in "$volume"/*.app
+    do
+        if [ -e "$file" ]
+        then
+            sudo cp -rf "$volume"/*.app /Applications
+            found=true
+            break
+        fi
+    done
+    if [ "$found" = false ]
+    then
+        for file in "$volume"/*.pkg
+        do
+            if [ -e "$file" ]
+            then
+                package=$(ls -1 "$volume" | grep .pkg | head -1)
+                sudo installer -pkg "$volume"/"$package" -target /
+                found=true
+                break
+            fi
+        done
+    fi
+    sudo hdiutil detach "$(echo "$listing" | cut -f 1)"
+    rm -rf $tempd
+    set +x
+}
+
+install_deb(){
+    TEMP_DEB="$(mktemp)"
+    wget -O "$TEMP_DEB" "$1"
+    sudo dpkg -i "$TEMP_DEB"
+    rm -f "$TEMP_DEB"
+}
+
+install_rpm(){
+    TEMP_RPM="$(mktemp)"
+    wget -O "$TEMP_RPM" "$1"
+    sudo rpm -ivh "$TEMP_RPM"
+    rm -f "$TEMP_RPM"
+}
+
+install_appimage(){
+    TEMP_APPIMAGE="$(mktemp -d)"
+    wget -O "$TEMP_APPIMAGE/Lens.Appimage" "$1"
+    chmod +x "$TEMP_APPIMAGE"
+    set -x
+    "$TEMP_APPIMAGE/Lens.Appimage" --appimage-extract
+    sudo mkdir -p /usr/share/lens
+    sudo mv "$TEMP_APPIMAGE"/squashfs-root/* /usr/share/lens
+    sudo install -Dm 644 /usr/share/lens/usr/share/icons/hicolor/512x512/apps/lens.png /usr/share/icons/hicolor/512x512/apps/open-lens.png
+    sudo install -Dm 644 "$(pwd)"/lens.desktop /usr/share/applications/lens.desktop
+    sudo ln -sf /usr/share/lens/lens /usr/bin/open-lens
+    sudo chmod -x /usr/share/lens/*.so
+    sudo rm -rf /usr/share/lens/AppRun
+    sudo rm -rf /usr/share/lens/lens.{desktop,png}
+    sudo rm -rf /usr/share/lens/usr
+    sudo rm -rf /usr/share/lens/resources/extensions/*/dist/*-arm64
+    rm -rf "$TEMP_APPIMAGE"
+    set +x
+}
+
+install_lens(){
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m detecting the latest version of lens"
+    lens_version=$(curl https://api.k8slens.dev/binaries/latest.json | tr ',' "\n" | tr -d '{' | tr -d '}' | head -1 | sed 's/"version"://g' | tr -d '"')
+    deb_link="https://api.k8slens.dev/binaries/Lens-$lens_version.amd64.deb"
+    rpm_link="https://api.k8slens.dev/binaries/Lens-$lens_version.x86_64.rpm"
+    appimage_link="https://api.k8slens.dev/binaries/Lens-$lens_version.x86_64.AppImage"
+    macos_arm_link="https://api.k8slens.dev/binaries/Lens-$lens_version-arm64.dmg"
+    macos_intel_link="https://api.k8slens.dev/binaries/Lens-$lens_version.dmg"
+    
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing it depending on you Operating System and Architechture"
+    continue_installion=true
+    operating_system="$(uname -s)"
+    if [ "$operating_system" = "Darwin" ]
+    then
+        architechture="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
+        if [ "$architechture" = "arm64" ]
+        then
+            echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing for Mac OS M1 Silicon"
+            install_dmg "$macos_arm_link"
+        else
+            echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing for Mac OS intel"
+            install_dmg "$macos_intel_link"
+        fi
+            
+    else
+        command -v dpkg > /dev/null && echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing for Debian based systems" && install_deb "$deb_link" && continue_installion=false
+        "$continue_installion" && command -v rpm > /dev/null && echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing for RedHat based systems" && install_rpm "$rpm_link" && continue_installion=false
+        "$continue_installion" && echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing for other Linux systems using appimage file" && install_appimage "$appimage_link" && continue_installion=false
+    fi
+}
+
 while true
 do
     read -p "Do you wish to set an alias for k=kubectl? [Yy]/[Nn] " yn
@@ -166,6 +265,16 @@ do
     read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
     case $yn in
         [Yy]* ) install_kube_ps && break;;
+        [Nn]* ) break;;
+        * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
+    esac
+done
+
+while true
+do
+    read -p "Do you wish to install lens (k8s IDE)? [Yy]/[Nn] " yn
+    case $yn in
+        [Yy]* ) install_lens && echo "lens installed" && break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
