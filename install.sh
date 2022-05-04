@@ -146,6 +146,13 @@ case $yn in
     * ) echo "Please answer [Yy] or [Nn].";;
 esac
 
+read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
+case $yn in
+    [Yy]* ) install_kube_ps;;
+    [Nn]* ) echo;;
+    * ) echo "Please answer [Yy] or [Nn].";;
+esac
+
 read -p "Do you wish to install kubectl krew (plugin manager for kubectl)? [Yy]/[Nn] " yn
 case $yn in
     [Yy]* ) install_krew;;
@@ -163,13 +170,6 @@ esac
 read -p "Do you wish to install neat plugin (k8s yaml clean-up)? [Yy]/[Nn] " yn
 case $yn in
     [Yy]* ) kubectl krew install neat && echo "kubect neat is available now";;
-    [Nn]* ) echo;;
-    * ) echo "Please answer [Yy] or [Nn].";;
-esac
-
-read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
-case $yn in
-    [Yy]* ) install_kube_ps;;
     [Nn]* ) echo;;
     * ) echo "Please answer [Yy] or [Nn].";;
 esac
