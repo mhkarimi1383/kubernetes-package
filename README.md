@@ -9,6 +9,7 @@ just clone it and run install.sh file in your terminal
 - [kube-ps1](https://github.com/jonmosco/kube-ps1)
 - [kubectl-krew](https://github.com/kubernetes-sigs/krew/)
 - [kubectl-neat](https://github.com/itaysk/kubectl-neat)
+- [fzf](https://github.com/junegunn/fzf.git)
 
 ## Supported Operating Systems:
 - Mac OS (M1 Silicon and Intel)
