@@ -23,3 +23,4 @@ Credis to [lens-bin](https://aur.archlinux.org/packages/lens-bin) AUR for making
 ## TODO:
 - [x] also install lens
 - [ ] one line installer (without cloning)
+- [ ] also install stern
