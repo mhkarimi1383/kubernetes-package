@@ -25,3 +25,4 @@ Credis to [lens-bin](https://aur.archlinux.org/packages/lens-bin) AUR for making
 - [ ] one line installer (without cloning)
 - [ ] also install stern
 - [x] kubectl shell completion
+- [ ] also install helm
