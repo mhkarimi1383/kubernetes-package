@@ -250,6 +250,29 @@ install_lens(){
     fi
 }
 
+install_shell_completion(){
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m detecting what type of completion I should install"
+    operating_system="$(uname -s)"
+    if grep -q "bash" <<< "$SHELL"; then
+        rc_file="$HOME/.bashrc"
+        if type _init_completion > dev/null; then
+            echo 'source <(kubectl completion bash)' >> "$rc_file"
+            if grep -q "k=kubectl" "$rc_file"; then
+                echo 'complete -F __start_kubectl k' >> "$rc_file"
+            fi
+        fi
+    fi
+    if grep -q "zsh" <<< "$SHELL"; then
+        rc_file="$HOME/.zshrc"
+        if type _init_completion > dev/null; then
+            echo 'source <(kubectl completion zsh)' >> "$rc_file"
+            sed -i '1s/^/autoload -Uz compinit /' "$rc_file"
+            sed -i '1s/^/compinit /' "$rc_file"
+        fi
+    fi
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m done with shell completion"
+}
+
 while true
 do
     read -p "Do you wish to set an alias for k=kubectl? [Yy]/[Nn] " yn
@@ -265,6 +288,16 @@ do
     read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
     case $yn in
         [Yy]* ) install_kube_ps && break;;
+        [Nn]* ) break;;
+        * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
+    esac
+done
+
+while true
+do
+    read -p "Do you wish to enable kubectl shell auto-completion? [Yy]/[Nn] " yn
+    case $yn in
+        [Yy]* ) install_shell_completion && break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
