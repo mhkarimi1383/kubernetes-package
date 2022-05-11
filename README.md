@@ -26,3 +26,4 @@ Credis to [lens-bin](https://aur.archlinux.org/packages/lens-bin) AUR for making
 - [ ] also install stern
 - [x] kubectl shell completion
 - [ ] also install helm
+- [ ] adding TUI
