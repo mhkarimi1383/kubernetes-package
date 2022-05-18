@@ -250,6 +250,15 @@ install_lens(){
     fi
 }
 
+install_helm(){
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing helm"
+    script_location=$(mktemp)
+    curl -fsSL -o "$script_location" https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    chmod 700 "$script_location"
+    "$script_location"
+    echo -e "\e[32m\e[1m🟢 INFO:\e[0m done with helm"
+}
+
 install_shell_completion(){
     echo -e "\e[32m\e[1m🟢 INFO:\e[0m detecting what type of completion I should install"
     operating_system="$(uname -s)"
@@ -308,6 +317,16 @@ do
     read -p "Do you wish to install lens (k8s IDE)? [Yy]/[Nn] " yn
     case $yn in
         [Yy]* ) install_lens && echo "lens installed" && break;;
+        [Nn]* ) break;;
+        * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
+    esac
+done
+
+while true
+do
+    read -p "Do you wish to install helm (k8s Package manager)? [Yy]/[Nn] " yn
+    case $yn in
+        [Yy]* ) install_helm && break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
