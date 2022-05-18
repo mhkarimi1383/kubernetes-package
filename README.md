@@ -15,6 +15,7 @@ Credis to [lens-bin](https://aur.archlinux.org/packages/lens-bin) AUR for making
 - [kubectl-neat](https://github.com/itaysk/kubectl-neat)
 - [fzf](https://github.com/junegunn/fzf.git)
 - [lens](https://github.com/lensapp/lens)
+- [helm](https://github.com/helm/helm/)
 
 ## Supported Operating Systems:
 - Mac OS (M1 Silicon and Intel)
@@ -25,5 +26,5 @@ Credis to [lens-bin](https://aur.archlinux.org/packages/lens-bin) AUR for making
 - [ ] one line installer (without cloning)
 - [ ] also install stern
 - [x] kubectl shell completion
-- [ ] also install helm
+- [x] also install helm
 - [ ] adding TUI
