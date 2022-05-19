@@ -74,7 +74,7 @@ else
     do
         read -p "Do you want to reinstall or upgrade it? [Yy]/[Nn] " yn
         case $yn in
-            [Yy]* ) rm -f "$kubectl_location" && install_kubectl && break;;
+            [Yy]* ) rm -f "$kubectl_location" && install_kubectl; break;;
             [Nn]* ) break;;
             * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
         esac
@@ -286,7 +286,7 @@ while true
 do
     read -p "Do you wish to set an alias for k=kubectl? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) set_alias && break;;
+        [Yy]* ) set_alias; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -296,7 +296,7 @@ while true
 do
     read -p "Do you wish to install kube-ps1 (Kubernetes prompt)? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_kube_ps && break;;
+        [Yy]* ) install_kube_ps; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -306,7 +306,7 @@ while true
 do
     read -p "Do you wish to enable kubectl shell auto-completion? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_shell_completion && break;;
+        [Yy]* ) install_shell_completion; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -316,7 +316,7 @@ while true
 do
     read -p "Do you wish to install lens (k8s IDE)? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_lens && echo "lens installed" && break;;
+        [Yy]* ) install_lens && echo "\e[32m\e[1m🟢 INFO:\e[0m lens installed"; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -326,7 +326,7 @@ while true
 do
     read -p "Do you wish to install helm (k8s Package manager)? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_helm && break;;
+        [Yy]* ) install_helm; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -336,8 +336,18 @@ while true
 do
     read -p "Do you wish to install kubectl krew (plugin manager for kubectl)? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_krew && break;;
+        [Yy]* ) install_krew; break;;
         [Nn]* ) echo -e '\e[32m\e[1m🟢 INFO:\e[0m finish (other things requires this part)...' && exit;;
+        * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
+    esac
+done
+
+while true
+do
+    read -p "Do you wish to install stern plugin (Multi pod and container log tailing for Kubernetes)? [Yy]/[Nn] " yn
+    case $yn in
+        [Yy]* ) kubectl krew install stern && echo "\e[32m\e[1m🟢 INFO:\e[0m kubect stern is available now"; break;;
+        [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
 done
@@ -346,7 +356,7 @@ while true
 do
     read -p "Do you wish to install kubens (namespace switcher) and kubectx (context switcher) using krew? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) install_kubectx && break;;
+        [Yy]* ) install_kubectx; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
@@ -356,7 +366,7 @@ while true
 do
     read -p "Do you wish to install neat plugin (k8s yaml clean-up)? [Yy]/[Nn] " yn
     case $yn in
-        [Yy]* ) kubectl krew install neat && echo "kubect neat is available now" && break;;
+        [Yy]* ) kubectl krew install neat && echo "kubect neat is available now"; break;;
         [Nn]* ) break;;
         * ) echo -e "\e[33m\e[1m🟠 BAD INPUT:\e[0m Please answer [Yy] or [Nn].";;
     esac
