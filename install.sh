@@ -115,10 +115,10 @@ install_krew(){
         rc_file="$HOME/.zshrc"
     fi
     echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> "$rc_file"
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 }
 
 install_kubectx(){
-    PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
     kubectl krew install ctx
     kubectl krew install ns
     echo -e "\e[32m\e[1m🟢 INFO:\e[0m installing fzf (fuzzy search on command line)"
